@@ -1,0 +1,261 @@
+Definir cursos como Lista
+Definir historial como Lista  // Simula pila
+Definir cola_revision como Lista  // Simula cola
+Proceso GestorNotasAcademicas
+
+    Repetir
+        Escribir "====== GESTOR DE NOTAS ACADÉMICAS ======"
+        Escribir "1. Registrar nuevo curso"
+        Escribir "2. Mostrar todos los cursos y notas"
+        Escribir "3. Calcular promedio general"
+        Escribir "4. Contar cursos aprobados y reprobados"
+        Escribir "5. Buscar curso por nombre (búsqueda lineal)"
+        Escribir "6. Actualizar nota de un curso"
+        Escribir "7. Eliminar un curso"
+        Escribir "8. Ordenar cursos por nota (burbuja)"
+        Escribir "9. Ordenar cursos por nombre (inserción)"
+        Escribir "10. Buscar curso por nombre (binaria)"
+        Escribir "11. Simular cola de solicitudes de revisión"
+        Escribir "12. Mostrar historial de cambios (pila)"
+        Escribir "13. Salir"
+        Escribir "Seleccione una opción: "
+        Leer opcion
+
+        Segun opcion Hacer
+            Caso 1: RegistrarCurso()
+            Caso 2: MostrarCursos()
+            Caso 3: CalcularPromedio()
+            Caso 4: ContarAprobados()
+            Caso 5: BuscarCursoLineal()
+            Caso 6: ActualizarNota()
+            Caso 7: EliminarCurso()
+            Caso 8: OrdenarPorNota()
+            Caso 9: OrdenarPorNombre()
+            Caso 10: BuscarCursoBinaria()
+            Caso 11: SimularColaRevision()
+            Caso 12: MostrarHistorial()
+            Caso 13:
+                Escribir "Gracias por usar el Gestor de Notas Académicas. ¡Hasta pronto!"
+                Salir
+            De Otro Modo:
+                Escribir "Opción inválida. Intente de nuevo."
+        FinSegun
+    Hasta Que opcion = 13
+// Función 1 - Registrar curso
+SubProceso RegistrarCurso
+    Definir nombre como Cadena
+    Definir nota como Real
+
+    Escribir "Ingrese el nombre del curso: "
+    Leer nombre
+    Si nombre = "" Entonces
+        Escribir "El nombre no puede estar vacío."
+        Retornar
+    FinSi
+
+    Escribir "Ingrese la nota obtenida: "
+    Leer nota
+    Si nota < 0 O nota > 100 Entonces
+        Escribir "La nota debe estar entre 0 y 100."
+        Retornar
+    FinSi
+
+    Agregar [nombre, nota] a cursos
+    Escribir "Curso registrado con éxito."
+FinSubProceso
+
+//Función 2 - Mostrar cursos
+SubProceso MostrarCursos
+    Si Longitud(cursos) = 0 Entonces
+        Escribir "No hay cursos registrados."
+    Sino
+        Para i ← 0 Hasta Longitud(cursos) - 1 Con Paso 1
+            Escribir i + 1, ". ", cursos[i][0], " - Nota: ", cursos[i][1]
+        FinPara
+    FinSi
+FinSubProceso
+
+//Función 3 - Calcular promedio
+SubProceso CalcularPromedio
+    Definir suma como Real
+    suma ← 0
+
+    Si Longitud(cursos) = 0 Entonces
+        Escribir "No hay cursos registrados."
+        Retornar
+    FinSi
+
+    Para i ← 0 Hasta Longitud(cursos) - 1 Con Paso 1
+        suma ← suma + cursos[i][1]
+    FinPara
+
+    promedio ← suma / Longitud(cursos)
+    Escribir "Promedio general: ", Redondear(promedio, 2)
+FinSubProceso
+
+//Función 4 - Contar aprobados y reprobados
+SubProceso ContarAprobados
+    Definir aprobados, reprobados como Entero
+    aprobados ← 0
+    reprobados ← 0
+
+    Para i ← 0 Hasta Longitud(cursos) - 1 Con Paso 1
+        Si cursos[i][1] >= 60 Entonces
+            aprobados ← aprobados + 1
+        Sino
+            reprobados ← reprobados + 1
+        FinSi
+    FinPara
+
+    Escribir "Cursos aprobados: ", aprobados
+    Escribir "Cursos reprobados: ", reprobados
+FinSubProceso
+
+//Función 5 - Búsqueda lineal
+SubProceso BuscarCursoLineal
+    Definir nombre_buscar como Cadena
+    Escribir "Ingrese el nombre del curso: "
+    Leer nombre_buscar
+    nombre_buscar ← Minusculas(nombre_buscar)
+
+    encontrado ← Falso
+    Para i ← 0 Hasta Longitud(cursos) - 1 Con Paso 1
+        Si Buscar(cursos[i][0], nombre_buscar) > 0 Entonces
+            Escribir "Curso encontrado: ", cursos[i][0], " - Nota: ", cursos[i][1]
+            encontrado ← Verdadero
+            Salir
+        FinSi
+    FinPara
+
+    Si No encontrado Entonces
+        Escribir "Curso no encontrado."
+    FinSi
+FinSubProceso
+
+//Función 6 - Actualizar nota
+SubProceso ActualizarNota
+    Definir nombre_buscar como Cadena
+    Definir nueva_nota como Real
+
+    Escribir "Ingrese el nombre del curso: "
+    Leer nombre_buscar
+    nombre_buscar ← Minusculas(nombre_buscar)
+
+    encontrado ← Falso
+    Para i ← 0 Hasta Longitud(cursos) - 1 Con Paso 1
+        Si Minusculas(cursos[i][0]) = nombre_buscar Entonces
+            Escribir "Ingrese la nueva nota: "
+            Leer nueva_nota
+            Si nueva_nota < 0 O nueva_nota > 100 Entonces
+                Escribir "La nota debe estar entre 0 y 100."
+                Retornar
+            FinSi
+            Agregar "Se actualizó: " + cursos[i][0] + " - Nota anterior: " + cursos[i][1] + " → Nueva nota: " + nueva_nota a historial
+            cursos[i][1] ← nueva_nota
+            Escribir "Nota actualizada correctamente."
+            encontrado ← Verdadero
+            Salir
+        FinSi
+    FinPara
+
+    Si No encontrado Entonces
+        Escribir "Curso no encontrado."
+    FinSi
+FinSubProceso
+
+//Función 7 - Eliminar curso
+SubProceso EliminarCurso
+    Definir nombre_buscar como Cadena
+    Definir confirmacion como Cadena
+
+    Escribir "Ingrese el curso a eliminar: "
+    Leer nombre_buscar
+    nombre_buscar ← Minusculas(nombre_buscar)
+
+    encontrado ← Falso
+    Para i ← 0 Hasta Longitud(cursos) - 1 Con Paso 1
+        Si Minusculas(cursos[i][0]) = nombre_buscar Entonces
+            Escribir "¿Está seguro que desea eliminarlo? (s/n): "
+            Leer confirmacion
+            Si Minusculas(confirmacion) = "s" Entonces
+                Agregar "Se eliminó: " + cursos[i][0] + " - Nota: " + cursos[i][1] a historial
+                Eliminar cursos[i]
+                Escribir "Curso eliminado correctamente."
+            FinSi
+            encontrado ← Verdadero
+            Salir
+        FinSi
+    FinPara
+
+    Si No encontrado Entonces
+        Escribir "Curso no encontrado."
+    FinSi
+FinSubProceso
+
+//Función 8 - Ordenar por nota (burbuja)
+SubProceso OrdenarPorNota
+    Definir i, j como Entero
+    Para i ← 0 Hasta Longitud(cursos) - 2 Con Paso 1
+        Para j ← 0 Hasta Longitud(cursos) - i - 2 Con Paso 1
+            Si cursos[j][1] < cursos[j+1][1] Entonces
+                Intercambiar cursos[j] con cursos[j+1]
+            FinSi
+        FinPara
+    FinPara
+    MostrarCursos()
+FinSubProceso
+
+//Función 9 - Ordenar por nombre (inserción)
+SubProceso OrdenarPorNombre
+    Para i ← 1 Hasta Longitud(cursos) - 1 Con Paso 1
+        actual ← cursos[i]
+        j ← i - 1
+        Mientras j >= 0 Y Minusculas(cursos[j][0]) > Minusculas(actual[0]) Hacer
+            cursos[j + 1] ← cursos[j]
+            j ← j - 1
+        FinMientras
+        cursos[j + 1] ← actual
+    FinPara
+    MostrarCursos()
+FinSubProceso
+
+//Función 10 - Búsqueda binaria
+SubProceso BuscarCursoBinaria
+    OrdenarPorNombre()
+    Definir nombre_buscar como Cadena
+    Escribir "Ingrese el nombre del curso a buscar: "
+FinSubProceso
+
+//Función 11 - Simular cola de solicitudes de revisión
+SubProceso SimularColaRevision
+    Definir curso_revision como Cadena
+
+    Escribir "Ingrese curso para revisión (escriba 'fin' para terminar):"
+    Repetir
+        Escribir "> "
+        Leer curso_revision
+        curso_revision ← EliminarEspacios(curso_revision)
+        Si Minusculas(curso_revision) <> "fin" Entonces
+            Agregar curso_revision a cola_revision
+        FinSi
+    Hasta Que Minusculas(curso_revision) = "fin"
+
+    Escribir "Procesando solicitudes:"
+    Mientras Longitud(cola_revision) > 0 Hacer
+        Escribir "Revisando: ", cola_revision[0]
+        Eliminar cola_revision[0]
+    FinMientras
+FinSubProceso
+
+//Función 12 -  Mostrar historial de cambios (pila)
+SubProceso MostrarHistorial
+    Si Longitud(historial) = 0 Entonces
+        Escribir "No hay cambios registrados."
+    Sino
+        Escribir "Historial de cambios recientes:"
+        Para i ← Longitud(historial) - 1 Hasta 0 Con Paso -1
+            Escribir (Longitud(historial) - i), ". ", historial[i]
+        FinPara
+    FinSi
+FinSubProceso
+Fin
